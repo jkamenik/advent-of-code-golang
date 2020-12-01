@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -x
+
+APP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/." && pwd )"
+IMAGE="golang:1.15"
+
+function main(){
+  # pull the build docker image
+  local image="$IMAGE"
+
+  docker run -ti --rm \
+    -v "$APP_DIR:/code" \
+    --workdir "/code" \
+    -p 8080:8080 \
+    "$image" \
+    /bin/bash
+}
+
+main
