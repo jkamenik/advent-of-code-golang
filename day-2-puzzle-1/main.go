@@ -29,17 +29,19 @@ func main() {
 	}
 
 	fmt.Println("Answers:")
-	count := 0
-	loopCount := &count
+	invalid := 0
+	invalidCount := &invalid
 	for i := 0; i < len(passwords); i++ {
 		p := passwords[i]
 		if !p.IsValid() {
-			*loopCount = *loopCount + 1
+			*invalidCount = *invalidCount + 1
 		}
 		fmt.Printf("  %s\n", p)
 	}
 
-	fmt.Printf("Total Invalid: %d\n", count)
+	fmt.Printf("Total Invalid: %d\n", invalid)
+	fmt.Printf("Total Valid:   %d\n", len(passwords)-invalid)
+	fmt.Printf("Total:         %d\n", len(passwords))
 }
 
 func scanFile(fileName string) ([]*password, error) {
