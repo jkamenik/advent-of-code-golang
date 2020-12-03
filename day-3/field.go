@@ -81,9 +81,9 @@ func (f *field) walk(right, down int) (steps, hits, misses int, err error) {
 		return 0, 0, 0, fmt.Errorf("Either right or down value out of range")
 	}
 
-	if len(f.field)%down != 0 {
-		return 0, 0, 0, fmt.Errorf("Down (%d) is not a multiple of the field height (%d)", down, len(f.field))
-	}
+	// if len(f.field)%down != 0 {
+	// 	return 0, 0, 0, fmt.Errorf("Down (%d) is not a multiple of the field height (%d)", down, len(f.field))
+	// }
 
 	f.hits = 0
 	f.misses = 0
@@ -95,9 +95,8 @@ func (f *field) walk(right, down int) (steps, hits, misses int, err error) {
 	fmt.Printf("clear (%v), tree (%v), miss (%v), hit (%v) markers\n", clearMarker, treeMarker, missMarker, hitMarker)
 
 	for i := 0; i < len(f.walkedField); i += down {
+		j := f.steps * right
 		f.steps++
-
-		j := i * right
 
 		row := f.walkedField[i]
 		character := row[j]
