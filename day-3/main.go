@@ -14,7 +14,7 @@ func usage() {
 
 		Then it will walk the array counting the number of trees ("#") it would hit as it walked.
 
-		Then it will write its results to walk.txt, and print out the number of trees it hit.`)
+		Then it will write its results to walked.txt, and print out the number of trees it hit.`)
 }
 
 func main() {
@@ -57,13 +57,16 @@ func main() {
 	}
 
 	fmt.Printf(`
--------------
-%s
--------------
-`, field.String())
-	fmt.Printf(`
 Hits:   %d
 Misses: %d
 Steps:  %d
 `, hits, misses, steps)
+
+	file, err := os.Create("walked.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	file.WriteString(field.String())
 }
