@@ -56,7 +56,7 @@ func (p *passport) ValidNorthPoleCred() bool {
 func (p *passport) ValidData() bool {
 	// if not a valid then not valid
 	if !p.ValidNorthPoleCred() {
-		fmt.Print("Missing keys")
+		fmt.Print("Missing keys\n")
 		return false
 	}
 
