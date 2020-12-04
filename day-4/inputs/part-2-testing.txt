@@ -63,6 +63,17 @@ pid:087499704 hgt:194cm ecl:grn iyr:2012 eyr:2030 byr:1980 hcl:#623a2f
 
 sep:-----
 
+type:height validity:invalid case:unit
+pid:087499704 hgt:149icm ecl:grn iyr:2012 eyr:2030 byr:1980 hcl:#623a2f
+
+type:height validity:valid case:cm-high-edge
+pid:087499704 hgt:193cin ecl:grn iyr:2012 eyr:2030 byr:1980 hcl:#623a2f
+
+type:height validity:invalid case:cm-high-edge
+pid:087499704 hgt:194bo ecl:grn iyr:2012 eyr:2030 byr:1980 hcl:#623a2f
+
+sep:-----
+
 type:haircolor validity:valid case:edges
 pid:087499704 hgt:150cm ecl:grn iyr:2012 eyr:2030 byr:1980 hcl:#09aaff
 
@@ -118,3 +129,7 @@ pid:87499704
 type:pid validity:invalid case:too-many
 hgt:150cm iyr:2012 eyr:2030 byr:1980 hcl:#09aaff ecl:grn
 pid:0199789970
+
+type:pid validity:invalid case:non-number
+hgt:150cm iyr:2012 eyr:2030 byr:1980 hcl:#09aaff ecl:grn
+pid:01997899a

@@ -69,13 +69,13 @@ func (p *passport) ValidData() bool {
 func (p passport) checkYear(key string, minYearInclusive, maxYearInclusive int64) bool {
 	val, _ := p.fieldMap[key]
 	if len(val) < 4 {
-		fmt.Printf("Invalid %s (%s), too few digits", key, val)
+		fmt.Printf("Invalid %s (%s), too few digits\n", key, val)
 		return false
 	}
 
 	num, err := strconv.ParseInt(val, 10, 64)
 	if err != nil {
-		fmt.Printf("Invalid %s (%s), %v", key, val, err)
+		fmt.Printf("Invalid %s (%s), %v\n", key, val, err)
 		return false
 	}
 
@@ -105,7 +105,7 @@ func (p *passport) ValidHeight() bool {
 
 	realNumber, err := strconv.ParseInt(num, 10, 64)
 	if err != nil {
-		fmt.Printf("hcl: %s error: %v", val, err)
+		fmt.Printf("hcl: %s error: %v\n", val, err)
 	}
 
 	if unit == "in" {
@@ -174,6 +174,14 @@ func (p *passport) ValidPassportID() bool {
 		fmt.Printf("pid: %s invalid number of characters\n", val)
 		return false
 	}
+
+	for i, char := range val {
+		if char < '0' || char > '9' {
+			fmt.Printf("pid: %s; char %d (%s) is not a valid number\n", val, i+1, string(char))
+			return false
+		}
+	}
+
 	return true
 }
 
