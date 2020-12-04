@@ -1,0 +1,63 @@
+pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1919
+hcl:#623a2f
+
+pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:2003
+hcl:#623a2f
+
+eyr:1972 cid:100
+hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
+
+iyr:2019
+hcl:#602927 eyr:1967 hgt:170cm
+ecl:grn pid:012533040 byr:1946
+
+hcl:dab227 iyr:2012
+ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
+
+type:valid-hcl
+hcl:#0190af iyr:2012
+ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
+
+type:invalid-hcl
+hcl:#0000000 iyr:2012
+ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
+
+type:invalid-hcl
+hcl:#00000g iyr:2012
+ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
+
+type:invalid-ecl
+hcl:#000000 iyr:2012
+ecl:blue hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
+
+hgt:59cm ecl:zzz
+eyr:2038 hcl:74454a iyr:2023
+pid:3556412378 byr:2007
+
+type:invalid-pid
+hcl:#0190af iyr:2012
+ecl:brn hgt:182cm pid:02157241 eyr:2020 byr:1992 cid:277
+
+type:valid-hgt
+hcl:#0190af iyr:2012
+ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
+
+type:invalid-hgt
+hcl:#0190af iyr:2012
+ecl:brn hgt:182c pid:021572410 eyr:2020 byr:1992 cid:277
+
+type:invalid-hgt
+hcl:#0190af iyr:2012
+ecl:brn hgt:149cm pid:021572410 eyr:2020 byr:1992 cid:277
+
+type:invalid-hgt
+hcl:#0190af iyr:2012
+ecl:brn hgt:193cm pid:021572410 eyr:2020 byr:1992 cid:277
+
+type:invalid-hgt
+hcl:#0190af iyr:2012
+ecl:brn hgt:49in pid:021572410 eyr:2020 byr:1992 cid:277
+
+type:invalid-hgt
+hcl:#0190af iyr:2012
+ecl:brn hgt:77in pid:021572410 eyr:2020 byr:1992 cid:277
