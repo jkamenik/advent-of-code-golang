@@ -53,6 +53,11 @@ func readPassports(fileName string) []passport {
 			continue
 		}
 
+		if len(lines) == 0 {
+			// bail until there are lines
+			continue
+		}
+
 		passport, err := newPassport(lines)
 		if err != nil {
 			log.Fatal(err)
