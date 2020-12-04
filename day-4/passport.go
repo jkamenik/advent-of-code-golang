@@ -120,6 +120,7 @@ func (p *passport) ValidHeight() bool {
 		}
 	} else {
 		fmt.Printf("hcl: %s invalid unit %s\n", val, unit)
+		return false
 	}
 
 	return true
