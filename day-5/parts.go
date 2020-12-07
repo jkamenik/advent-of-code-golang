@@ -18,7 +18,21 @@ func part1(filename string) {
 }
 
 func part2(filename string) {
+	fmt.Println("--- Part 2 ---")
+	// gaps := []int
 
+	seats := readInputFile(filename)
+	sort.Sort(seats)
+
+	lastSeat := -1
+	x := &lastSeat
+	for _, seat := range seats.items {
+		if seat.id-1 != lastSeat {
+			fmt.Printf("Missing seat before: %s\n Last seat ID: %d\n", seat.String(), lastSeat)
+		}
+
+		*x = seat.id
+	}
 }
 
 func readInputFile(fileName string) *seats {

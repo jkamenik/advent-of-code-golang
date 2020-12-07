@@ -28,7 +28,7 @@ func newFromLine(line string) seat {
 }
 
 func binarySearch(searchPath string, max int) int {
-	fmt.Printf("Checking %s at max %d\n", searchPath, max)
+	// fmt.Printf("Checking %s at max %d\n", searchPath, max)
 	min := 0
 	updatedMax := &max
 	updatedMin := &min
@@ -49,7 +49,7 @@ func binarySearch(searchPath string, max int) int {
 			}
 		}
 
-		fmt.Printf("%s: %d x %d, dist:%d\n", string(char), *updatedMin, *updatedMax, distance)
+		// fmt.Printf("%s: %d x %d, dist:%d\n", string(char), *updatedMin, *updatedMax, distance)
 	}
 
 	// The converge so just return one of them
