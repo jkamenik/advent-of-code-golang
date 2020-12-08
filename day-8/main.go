@@ -8,11 +8,11 @@ import (
 func usage() {
 	fmt.Printf("%s <file>\n\n", os.Args[0])
 	fmt.Println(`
-		Reads password files and prints valid count`)
+		Reads Instructions from a file`)
 }
 
 func main() {
-	fmt.Println("Day 5")
+	fmt.Println("Day 8")
 
 	if len(os.Args) <= 1 {
 		fmt.Println("Error: Missing required inputs")

@@ -88,11 +88,3 @@ func (s *Stack) Run() error {
 
 	return nil
 }
-
-// func Acc(adjustment int) (int, error) {
-//
-// }
-//
-// func Jump(adjustment int) (int, error) {
-//
-// }

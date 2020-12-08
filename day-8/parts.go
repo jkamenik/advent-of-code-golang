@@ -11,7 +11,7 @@ func part1(filename string) {
 		fmt.Println(err)
 	}
 
-	fmt.Printf("%+v\n", stack)
+	// fmt.Printf("%+v\n", stack)
 
 	fmt.Printf("Current Instruction: %d\nAccumulator: %d\n", stack.current, stack.accumulator)
 
