@@ -54,10 +54,22 @@ func (s *Stack) String() string {
 	return fmt.Sprintf("{acc:%d cur:%d inst:%s }", s.accumulator, s.current, str)
 }
 
+// Reset resets the stack
+func (s *Stack) Reset() {
+	// Be one before the first instruction
+	s.current = -1
+
+	s.accumulator = 0
+
+	for _, op := range s.instructions {
+		op.visited = 0
+	}
+}
+
 // Run runs the stack
 func (s *Stack) Run() error {
-	// always start at 0
-	s.current = -1
+	s.Reset()
+
 	for true {
 		s.current++
 		if s.current >= len(s.instructions) {
