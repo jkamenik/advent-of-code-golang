@@ -2,17 +2,19 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"strconv"
 )
 
 func usage() {
-	fmt.Printf("%s <file>\n\n", os.Args[0])
+	fmt.Printf("%s <file> <preample length>\n\n", os.Args[0])
 }
 
 func main() {
 	fmt.Println("Day 8")
 
-	if len(os.Args) <= 1 {
+	if len(os.Args) <= 2 {
 		fmt.Println("Error: Missing required inputs")
 		usage()
 		os.Exit(1)
@@ -26,6 +28,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	part1(fileName)
-	part2(fileName)
+	preamble, err := strconv.ParseInt(os.Args[2], 10, 32)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	part1(fileName, int(preamble))
+	part2(fileName, int(preamble))
 }
