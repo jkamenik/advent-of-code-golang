@@ -13,7 +13,6 @@ func part1(filename string) {
 	fmt.Println("--- Part 1 ---")
 
 	numbers := readInputFile(filename)
-	sort.Sort(IntSlice(numbers))
 
 	fmt.Printf("%v\n", numbers)
 
@@ -23,18 +22,6 @@ func part1(filename string) {
 	for i, num := range numbers[0 : len(numbers)-1] {
 		next := numbers[i+1]
 		diff := next - num
-
-		if i == 0 {
-			// Check the first step against an assumed 0
-			if num == 1 {
-				fmt.Printf("1 jolt(s) between 0 and %d\n", num)
-				// first is a 1 step
-				oneJolt++
-			} else if num == 3 {
-				fmt.Printf("3 jolt(s) between 0 and %d\n", num)
-				threeJolt++
-			}
-		}
 
 		fmt.Printf("%d jolt(s) between %d and %d\n", diff, num, next)
 
@@ -63,7 +50,7 @@ func readInputFile(filename string) []int64 {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	rtn := make([]int64, 0)
+	numbers := []int64{0} // always assume a leading zero
 	for scanner.Scan() {
 		line := scanner.Text()
 
@@ -71,8 +58,16 @@ func readInputFile(filename string) []int64 {
 		if err != nil {
 			log.Fatal(err)
 		}
-		rtn = append(rtn, num)
+		numbers = append(numbers, num)
 	}
 
-	return rtn
+	// Sort them
+	sort.Sort(IntSlice(numbers))
+
+	max := numbers[len(numbers)-1]
+
+	// add 3
+	numbers = append(numbers, max+3)
+
+	return numbers
 }
