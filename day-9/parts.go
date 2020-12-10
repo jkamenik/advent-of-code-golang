@@ -9,6 +9,8 @@ import (
 )
 
 func part1(filename string, preambleLength int) {
+	return
+
 	fmt.Println("--- Part 1 ---")
 	numbers := readInputFile(filename)
 	fmt.Printf("%+v\n", numbers)
@@ -59,8 +61,65 @@ func part1(filename string, preambleLength int) {
 	fmt.Printf("Invalid items: %v\n", invalid)
 }
 
-func part2(filename string, preambleLength int) {
+func part2(filename string, ign int) {
 	fmt.Println("--- Part 2 ---")
+
+	numbers := readInputFile(filename)
+	fmt.Printf("%v\n", numbers)
+
+	// Instead we find the minimum number of contigous sets that can add to the number
+
+	target := int64(50047984) // Puzzle target
+	// target := int64(127) // Sample target
+
+	maxSetSize := len(numbers) - 1
+
+	for i := 2; i < maxSetSize; i++ {
+		fmt.Printf("Checking sets of %d\n", i)
+
+		weakset := make([]int64, 0)
+		for j := range numbers[0 : len(numbers)-i+1] {
+			set := numbers[j : j+i]
+
+			acc := int64(0)
+			for _, x := range set {
+				acc = acc + x
+			}
+
+			fmt.Printf("  Set %v - %d\n", set, acc)
+
+			if acc == target {
+				fmt.Println("    Weakness found")
+				weakset = set
+				break
+			}
+		}
+
+		if len(weakset) != 0 {
+			fmt.Printf("Weak set found: %v\n", weakset)
+
+			smallest := int64(0)
+			largest := int64(0)
+			for _, num := range weakset {
+				if smallest == 0 {
+					smallest = num
+				}
+
+				if num < smallest {
+					smallest = num
+				}
+
+				if num > largest {
+					largest = num
+				}
+			}
+
+			fmt.Printf("Weakness is: %d\n", smallest+largest)
+
+			break
+		}
+	}
+
 }
 
 func readInputFile(filename string) []int64 {
