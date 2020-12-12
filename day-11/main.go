@@ -10,7 +10,7 @@ func usage() {
 }
 
 func main() {
-	fmt.Println("Day 8")
+	fmt.Println("Day 11")
 
 	if len(os.Args) <= 1 {
 		fmt.Println("Error: Missing required inputs")
