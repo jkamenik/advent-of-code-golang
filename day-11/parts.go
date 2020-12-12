@@ -11,7 +11,7 @@ func part1(filename string) {
 	fmt.Printf("%v\n\n", pre)
 
 	for true {
-		next := pre.Iterate()
+		next := pre.IteratePart1()
 		fmt.Printf("%v\n\n", next)
 
 		if pre.Same(next) {

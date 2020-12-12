@@ -59,19 +59,19 @@ func (s SeatMap) Same(other SeatMap) bool {
 	return true
 }
 
-// Iterate generates a new SeatMap using the following rules:
+// IteratePart1 generates a new SeatMap using the following rules:
 // 1. Empty areas (.) are ignored
 // 2. Empty Seats (L) w/ no adjacent occupied seats (#) become occupied
 // 3. Occupied Seats (#) w/ 4 or more adjacent occupied seats become empty
 // 4. Otherwise the seat doesn't change.
-func (s SeatMap) Iterate() SeatMap {
+func (s SeatMap) IteratePart1() SeatMap {
 	next := []string{}
 
 	for i, line := range s {
 		nextLine := ""
 
 		for j, char := range line {
-			nextLine = nextLine + s.nextStringFor(i, j, string(char))
+			nextLine = nextLine + s.nextStringForPart1(i, j, string(char))
 		}
 
 		next = append(next, nextLine)
@@ -80,7 +80,7 @@ func (s SeatMap) Iterate() SeatMap {
 	return next
 }
 
-func (s SeatMap) nextStringFor(i, j int, char string) string {
+func (s SeatMap) nextStringForPart1(i, j int, char string) string {
 	if char == floor {
 		return floor
 	}
@@ -89,14 +89,6 @@ func (s SeatMap) nextStringFor(i, j int, char string) string {
 	below := s.below(i, j)
 	besides := s.besides(i, j)
 	occupied := countOccupied(above + below + besides)
-
-	// 	fmt.Printf(`
-	// ---
-	// %dx%d=%d
-	// %s
-	// %s%s%s
-	// %s
-	// ---`, i, j, occupied, above, string(besides[0]), char, string(besides[1]), below)
 
 	if char == empty {
 		if occupied == 0 {
