@@ -13,7 +13,7 @@ type Waypoint struct {
 }
 
 func NewWaypoint() *Waypoint {
-	x := Waypoint{Ferry: NewFerry()}
+	x := Waypoint{Ferry: NewFerry(), east: 10, north: 1}
 
 	return &x
 }
@@ -72,13 +72,24 @@ func (w *Waypoint) West(unit int) {
 
 // Left turns left by unit degrees
 func (w *Waypoint) Left(unit int) {
-	w.Right(unit * -1)
+	rotCount := unit / 90
+
+	for x := 0; x < rotCount; x++ {
+		w.north, w.east = w.east, w.north*-1
+	}
 }
 
 // Right turns to the right by unit degrees
 func (w *Waypoint) Right(unit int) {
+	rotCount := unit / 90
+
+	for x := 0; x < rotCount; x++ {
+		w.north, w.east = w.east*-1, w.north
+	}
 }
 
 // Forward moves the ferry forward N times
 func (w *Waypoint) Forward(unit int) {
+	w.Ferry.North(unit * w.north)
+	w.Ferry.East(unit * w.east)
 }
