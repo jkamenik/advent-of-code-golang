@@ -38,11 +38,13 @@ func part1(filename string) {
 
 		fmt.Printf("Starting: %+v\n", game)
 
-		for i := len(seed); i < 2020; i++ {
+		// part 1: 2020
+		// part 2: 30000000
+		for i := len(seed); i < 30000000; i++ {
 			game.Turn()
 
-			fmt.Printf("Turn %d: %+v\n", game.turn, game)
 		}
+		fmt.Printf("Turn %d: %+v\n", game.turn, game)
 	}
 }
 

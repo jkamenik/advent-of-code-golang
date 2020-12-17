@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 type MemoryGame struct {
 	// index is the number spoken, values an array of all the times it was spoken
 	board      map[int][]int
@@ -42,7 +40,7 @@ func (game *MemoryGame) Turn() int {
 		return game.speak(0)
 	}
 
-	fmt.Printf("Turns: %v\n", turns)
+	// fmt.Printf("Turns: %v\n", turns)
 
 	prev := turns[len(turns)-2]
 	next := turns[len(turns)-1]
