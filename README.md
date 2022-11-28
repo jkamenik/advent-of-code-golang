@@ -1,5 +1,5 @@
-# Advent of Code 2020
-My (when time allows) attempt at the [Advent of Code](https://adventofcode.com/) 2020
+# Advent of Code - In GoLang
+My (when time allows) attempt at the [Advent of Code](https://adventofcode.com/)
 
 ## Usage
 
@@ -9,4 +9,6 @@ cd advent-2020
 ./run
 ```
 
-Now `cd` into one of the days and do `go run .`.  Each directory is a self contained go module.
+Now `cd` into one of the years, and days and do `go run .`.  Each directory is a self contained go module.
+
+Note: If there are input files I usually put them in `/test` is the day directory.  The 2nd puzzle not have any inputs as those have to be earned and I don't want to ruin the surprise.
