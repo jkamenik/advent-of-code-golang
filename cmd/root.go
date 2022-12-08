@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	twentyTwentyTwo "github.com/jkamenik/advent-of-code-golang/cmd/2022"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -30,6 +31,9 @@ func init() {
 }
 
 func Execute() {
+	// Now load all the subcommands
+	twentyTwentyTwo.Load(rootCmd)
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
