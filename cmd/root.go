@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -35,7 +36,7 @@ func Execute() {
 	}
 }
 
-func setup() {
+func setup() error {
 	log.Trace().Msg("Setting log verbosity")
 	if verbosity >= 1 {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)

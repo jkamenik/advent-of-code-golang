@@ -3,7 +3,7 @@
 set -x
 
 APP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/." && pwd )"
-IMAGE="golang:1.15"
+IMAGE="golang:1.19"
 
 function main(){
   # pull the build docker image

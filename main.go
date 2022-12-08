@@ -1,11 +1,17 @@
 package main
 
 import (
+	"github.com/jkamenik/advent-of-code-golang/cmd"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
+
+	"time"
+	"strings"
+	"fmt"
 )
 
 func main() {
-	zerolog.SetGlobalLevel(zerolog.Infolevel)
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 
 	// Setup a same message format
 	log.Logger = log.Output(zerolog.ConsoleWriter{
@@ -17,4 +23,6 @@ func main() {
 			return fmt.Sprintf("%s |", i)
 		},
 	})
+
+	cmd.Execute()
 }
