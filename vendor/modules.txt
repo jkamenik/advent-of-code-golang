@@ -1,0 +1,15 @@
+# github.com/mattn/go-colorable v0.1.13
+## explicit
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.16
+github.com/mattn/go-isatty
+# github.com/rs/zerolog v1.28.0
+## explicit
+github.com/rs/zerolog
+github.com/rs/zerolog/internal/cbor
+github.com/rs/zerolog/internal/json
+# golang.org/x/sys v0.3.0
+## explicit
+golang.org/x/sys/unix
+# golang.org/x/tools v0.4.0
+## explicit
