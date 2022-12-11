@@ -4,6 +4,7 @@ package input
 import (
 	"bufio"
 	"os"
+	"strconv"
 )
 
 type LineHandler func(string) error
@@ -48,4 +49,31 @@ func StreamFile(fileName string, buffer int) (<-chan string, error) {
 	}()
 
 	return out, err
+}
+
+// IntOrErr is either the int or an error generated from parsing
+type IntOrErr struct {
+	value int
+	err   error
+}
+
+func StringChanToIntChan(in <-chan string) <-chan IntOrErr {
+	out := make(chan IntOrErr)
+	go func() {
+		defer close(out)
+
+		for line := range in {
+			item := IntOrErr{}
+			v, err := strconv.ParseUint(line, 10, 64)
+			if err != nil {
+				item.err = err
+			} else {
+				item.value = int(v)
+			}
+
+			out <- item
+		}
+	}()
+
+	return out
 }
