@@ -35,7 +35,7 @@ func TestStringChanToIntChan(t *testing.T) {
 		t.Errorf("A simple file should have had 4 lines, %v", collector)
 	}
 	for _, v := range collector {
-		if v.err == nil {
+		if v.Err == nil {
 			t.Errorf("%v should be an error but wasn't", v)
 		}
 	}
@@ -54,7 +54,7 @@ func TestStringChanToIntChan(t *testing.T) {
 		t.Errorf("A simple file should have had 4 lines, %v", collector)
 	}
 	for _, v := range collector {
-		if v.err != nil {
+		if v.Err != nil {
 			t.Errorf("%v should not have errored but did", v)
 		}
 	}

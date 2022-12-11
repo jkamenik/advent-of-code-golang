@@ -53,8 +53,8 @@ func StreamFile(fileName string, buffer int) (<-chan string, error) {
 
 // IntOrErr is either the int or an error generated from parsing
 type IntOrErr struct {
-	value int
-	err   error
+	Value int
+	Err   error
 }
 
 func StringChanToIntChan(in <-chan string) <-chan IntOrErr {
@@ -66,9 +66,9 @@ func StringChanToIntChan(in <-chan string) <-chan IntOrErr {
 			item := IntOrErr{}
 			v, err := strconv.ParseUint(line, 10, 64)
 			if err != nil {
-				item.err = err
+				item.Err = err
 			} else {
-				item.value = int(v)
+				item.Value = int(v)
 			}
 
 			out <- item
