@@ -28,6 +28,16 @@ var d1p1 = &cobra.Command{
 				input.StringChanToIntChan(stream)))
 
 		log.Info().Str("ints", fmt.Sprintf("%v", ints)).Msg("The array")
+
+		max := 0
+		for _, v := range ints {
+			if v > max {
+				log.Debug().Msgf("%v is larger then current max of %v", v, max)
+				max = v
+			}
+		}
+
+		fmt.Printf("Max value is: %v\n", max)
 	},
 }
 
