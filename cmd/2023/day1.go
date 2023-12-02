@@ -8,35 +8,33 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var d1Regex = regexp.MustCompile("[1-9]")
-var d1_2Regex = regexp.MustCompile("[1-9]|zero|one|two|three|four|five|six|seven|eight|nine")
+var d1FirstRegex = regexp.MustCompile("([1-9])")
+var d1LastRegex = regexp.MustCompile(".*([1-9])")
+var d1First2Regex = regexp.MustCompile("([1-9]|zero|one|two|three|four|five|six|seven|eight|nine)")
+var d1Last2Regex = regexp.MustCompile(".*([1-9]|zero|one|two|three|four|five|six|seven|eight|nine)")
 
 func d1p1(filename string, file <-chan string)(string, error) {
-	return d1Solution(d1Regex, file)
+	return d1Solution(d1FirstRegex, d1LastRegex, file)
 }
 
 func d1p2(filename string, file <-chan string)(string, error) {
-	return d1Solution(d1_2Regex, file)
+	return d1Solution(d1First2Regex, d1Last2Regex, file)
 }
 
-func d1Solution(regex *regexp.Regexp, file <- chan string)(string, error) {
+func d1Solution(firstRx *regexp.Regexp, lastRx *regexp.Regexp, file <- chan string)(string, error) {
 	sum := uint64(0)
 	for line := range file {
 		log.Trace().Msgf("line: %s", line)
-		first := ""
-		last := ""
 
-		all := regex.FindAllString(line, -1)
+		matches := firstRx.FindSubmatch([]byte(line))
+		log.Trace().Msgf("First matches: %v", matches)
+		first := toDigit(string(matches[1]))
 
-		for _, match := range all {
-			log.Trace().Msgf("number: %v", match)
-			last = toDigit(match)
-			if first == "" {
-				first = last
-			}
-		}
+		matches = lastRx.FindSubmatch([]byte(line))
+		log.Trace().Msgf("Last matches: %v", matches)
+		last := toDigit(string(matches[1]))
 
-		log.Debug().Msgf("%s: %s%s",line, first,last)
+		log.Debug().Msgf("%s: %s,%s",line, first,last)
 
 		v, err := strconv.ParseUint(fmt.Sprintf("%s%s", first, last), 10, 64)
 		if err != nil {
