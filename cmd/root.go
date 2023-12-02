@@ -5,6 +5,7 @@ import (
 	"os"
 
 	twentyTwentyTwo "github.com/jkamenik/advent-of-code-golang/cmd/2022"
+	twentyTwentyThree "github.com/jkamenik/advent-of-code-golang/cmd/2023"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -33,6 +34,7 @@ func init() {
 func Execute() {
 	// Now load all the subcommands
 	twentyTwentyTwo.Load(rootCmd)
+	twentyTwentyThree.Load(rootCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
