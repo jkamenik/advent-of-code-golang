@@ -38,19 +38,46 @@ func d3p2(filename string, file <-chan string) (string, error) {
 	board := newD3Board(file)
 	log.Trace().Msgf("%v", board)
 
-	sum := int64(0)
-	for num := range board.iterate() {
-		log.Debug().Msgf("Number: %v", num)
+	numbers := []d3Number{}
+	for n := range board.iterate() {
+		numbers = append(numbers, n)
+	}
 
-		if num.isSymbolAdjacent() {
-			n, err := strconv.ParseInt(num.Number, 10, 64)
-			if err != nil {
-				return "", err
+	sum := int64(0)
+	for gear := range board.gears() {
+		log.Debug().Msgf("Gear: %v", gear)
+
+		ratio := []d3Number{}
+
+		// see if there are any numbers touching it
+		for _, num := range numbers {
+			// bail early
+			if len(ratio) == 2 {
+				break
 			}
-			sum = sum + n
-		} else {
-			log.Info().Msgf("No symbol near %v", num)
+
+			if num.isNear(gear.X, gear.Y) {
+				ratio = append(ratio, num)
+			}
 		}
+
+		log.Debug().Msgf("Ratio: %v", ratio)
+		if len(ratio) < 2 {
+			log.Info().Msgf("Gear %v doesn't have a ratio", gear)
+			continue
+		}
+
+		n1, err := strconv.ParseInt(ratio[0].Number, 10, 64)
+		if err != nil {
+			return "", err
+		}
+
+		n2, err := strconv.ParseInt(ratio[1].Number, 10, 64)
+		if err != nil {
+			return "", err
+		}
+
+		sum = sum + (n1 * n2)
 	}
 
 	return fmt.Sprintf("%d", sum), nil
@@ -80,6 +107,41 @@ func (b d3Board) iterate() <-chan d3Number {
 				// log.Trace().Msgf("%d, %d: %v", x, y, string(line[y]))
 
 				if r >= '0' && r <= '9' {
+					num.Update(x, y, r)
+					log.Trace().Msgf("%v", num)
+				} else {
+					// flush the last number if valid and start over
+					if num.X != -1 {
+						rtn <- num
+					}
+					num = newD3Number(b)
+				}
+			}
+
+			// if we still have a number then flush it
+			if num.X != -1 {
+				rtn <- num
+			}
+		}
+
+		close(rtn)
+	}()
+
+	return rtn
+}
+
+func (b d3Board) gears() <-chan d3Number {
+	rtn := make(chan d3Number)
+
+	go func() {
+		for x := 0; x < len(b); x++ {
+			line := b[x]
+			num := newD3Number(b)
+			for y := 0; y < len(line); y++ {
+				r := line[y]
+				// log.Trace().Msgf("%d, %d: %v", x, y, string(line[y]))
+
+				if r == '*' {
 					num.Update(x, y, r)
 					log.Trace().Msgf("%v", num)
 				} else {
@@ -185,7 +247,7 @@ func newD3Number(board d3Board) (num d3Number) {
 }
 
 func (n d3Number) String() string {
-	return fmt.Sprintf("{%d, %d: %s}", n.X, n.Y, n.Number)
+	return fmt.Sprintf("{%d, %d: %s (%d)}", n.X, n.Y, n.Number, n.Length)
 }
 
 func (n *d3Number) Update(x, y int, c byte) {
@@ -205,6 +267,31 @@ func (n d3Number) isSymbolAdjacent() bool {
 	// for each character check all adjacent cells
 	for y := 0; y < n.Length; y++ {
 		if n.Board.hasAdjacentSymbol(n.X, n.Y+y) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (n d3Number) isNear(x, y int) bool {
+	// same row
+	if x == n.X {
+		if y == n.Y - 1  || y == n.Y + n.Length {
+			return true
+		}
+	}
+
+	// above
+	if x == n.X - 1{
+		if y >= n.Y - 1  && y <= n.Y + n.Length{
+			return true
+		}
+	}
+
+	// below
+	if x == n.X + 1 {
+		if y >= n.Y - 1  && y <= n.Y + n.Length{
 			return true
 		}
 	}
