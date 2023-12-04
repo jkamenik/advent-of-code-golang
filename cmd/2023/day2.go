@@ -8,13 +8,13 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func d2p1(filename string, file <-chan string)(string, error) {
+func d2p1(filename string, file <-chan string) (string, error) {
 	sum := int64(0)
 	bag := d2Game{
-		ID: 0,
-		Red: 12,
+		ID:    0,
+		Red:   12,
 		Green: 13,
-		Blue: 14,
+		Blue:  14,
 	}
 
 	for line := range file {
@@ -37,7 +37,7 @@ func d2p1(filename string, file <-chan string)(string, error) {
 	return fmt.Sprintf("%d", sum), nil
 }
 
-func d2p2(filename string, file <-chan string)(string, error) {
+func d2p2(filename string, file <-chan string) (string, error) {
 	sum := int64(0)
 
 	for line := range file {
@@ -56,10 +56,10 @@ func d2p2(filename string, file <-chan string)(string, error) {
 }
 
 type d2Game struct {
-	ID int64
-	Red int64
+	ID    int64
+	Red   int64
 	Green int64
-	Blue int64
+	Blue  int64
 }
 
 func newD2Game(line string) (d2Game, error) {
@@ -112,8 +112,8 @@ func newD2Game(line string) (d2Game, error) {
 
 func (g d2Game) isPossible(o d2Game) bool {
 	if o.Green <= g.Green &&
-	   o.Red <= g.Red &&
-	   o.Blue <= g.Blue {
+		o.Red <= g.Red &&
+		o.Blue <= g.Blue {
 		return true
 	}
 
@@ -123,7 +123,6 @@ func (g d2Game) isPossible(o d2Game) bool {
 func (g d2Game) Power() int64 {
 	return g.Red * g.Green * g.Blue
 }
-
 
 func init() {
 	puzzleLookup["2-1"] = d2p1

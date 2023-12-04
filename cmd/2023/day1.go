@@ -2,8 +2,8 @@ package twentyTwentyThree
 
 import (
 	"fmt"
-	"strconv"
 	"regexp"
+	"strconv"
 
 	"github.com/rs/zerolog/log"
 )
@@ -13,15 +13,15 @@ var d1LastRegex = regexp.MustCompile(".*([1-9])")
 var d1First2Regex = regexp.MustCompile("([1-9]|zero|one|two|three|four|five|six|seven|eight|nine)")
 var d1Last2Regex = regexp.MustCompile(".*([1-9]|zero|one|two|three|four|five|six|seven|eight|nine)")
 
-func d1p1(filename string, file <-chan string)(string, error) {
+func d1p1(filename string, file <-chan string) (string, error) {
 	return d1Solution(d1FirstRegex, d1LastRegex, file)
 }
 
-func d1p2(filename string, file <-chan string)(string, error) {
+func d1p2(filename string, file <-chan string) (string, error) {
 	return d1Solution(d1First2Regex, d1Last2Regex, file)
 }
 
-func d1Solution(firstRx *regexp.Regexp, lastRx *regexp.Regexp, file <- chan string)(string, error) {
+func d1Solution(firstRx *regexp.Regexp, lastRx *regexp.Regexp, file <-chan string) (string, error) {
 	sum := uint64(0)
 	for line := range file {
 		log.Trace().Msgf("line: %s", line)
@@ -34,7 +34,7 @@ func d1Solution(firstRx *regexp.Regexp, lastRx *regexp.Regexp, file <- chan stri
 		log.Trace().Msgf("Last matches: %v", matches)
 		last := toDigit(string(matches[1]))
 
-		log.Debug().Msgf("%s: %s,%s",line, first,last)
+		log.Debug().Msgf("%s: %s,%s", line, first, last)
 
 		v, err := strconv.ParseUint(fmt.Sprintf("%s%s", first, last), 10, 64)
 		if err != nil {
@@ -74,7 +74,6 @@ func toDigit(s string) string {
 		return s
 	}
 }
-
 
 func init() {
 	puzzleLookup["1-1"] = d1p1
