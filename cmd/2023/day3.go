@@ -298,8 +298,3 @@ func (n d3Number) isNear(x, y int) bool {
 
 	return false
 }
-
-func init() {
-	puzzleLookup["3-1"] = d3p1
-	puzzleLookup["3-2"] = d3p2
-}

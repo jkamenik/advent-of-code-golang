@@ -150,9 +150,3 @@ func (card d4Card) Matches() int {
 
 	return matches
 }
-
-func init() {
-	puzzleLookup["4-1"] = d4p1
-	puzzleLookup["4-2"] = d4p2
-}
-

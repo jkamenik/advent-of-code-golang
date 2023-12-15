@@ -74,8 +74,3 @@ func toDigit(s string) string {
 		return s
 	}
 }
-
-func init() {
-	puzzleLookup["1-1"] = d1p1
-	puzzleLookup["1-2"] = d1p2
-}

@@ -123,8 +123,3 @@ func (g d2Game) isPossible(o d2Game) bool {
 func (g d2Game) Power() int64 {
 	return g.Red * g.Green * g.Blue
 }
-
-func init() {
-	puzzleLookup["2-1"] = d2p1
-	puzzleLookup["2-2"] = d2p2
-}

@@ -5,13 +5,23 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/jkamenik/advent-of-code-golang/cmd/2023/day5"
 	"github.com/jkamenik/advent-of-code-golang/input"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
-type puzzle func(filename string, file <-chan string) (output string, err error)
+// Puzzle is a function that takes the file input and returns the answer
+// or an error
+type Puzzle func(filename string, file <-chan string) (output string, err error)
 
-var puzzleLookup = map[string]puzzle{}
+// RegisterPuzzle registers a puzzle for execution
+func RegisterPuzzle(day string, puzzle Puzzle) {
+	log.Trace().Str("lookup",day).Msg("Registered puzzle")
+	puzzleLookup[day] = puzzle
+}
+
+var puzzleLookup = map[string]Puzzle{}
 
 var twentyTwentyThree = &cobra.Command{
 	Use:   "2023 <day> <puzzle> [<file>]",
@@ -62,4 +72,16 @@ Output is provided to the screen.
 // Load adds our root command to the command we are given
 func Load(root *cobra.Command) {
 	root.AddCommand(twentyTwentyThree)
+
+	// Now connect all the puzzles
+	RegisterPuzzle("1-1", d1p1)
+	RegisterPuzzle("1-2", d1p2)
+	RegisterPuzzle("2-1", d2p1)
+	RegisterPuzzle("2-2", d2p2)
+	RegisterPuzzle("3-1", d3p1)
+	RegisterPuzzle("3-2", d3p2)
+	RegisterPuzzle("4-1", d4p1)
+	RegisterPuzzle("4-2", d4p2)
+	RegisterPuzzle("5-1", day5.Part1)
+	RegisterPuzzle("5-2", day5.Part2)
 }
