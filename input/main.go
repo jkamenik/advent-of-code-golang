@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type LineHandler func(string) error
@@ -74,6 +75,27 @@ func StringChanToIntChan(in <-chan string) <-chan IntOrErr {
 			out <- item
 		}
 	}()
+
+	return out
+}
+
+
+// StringChanToFieldChan converts a string change into a channel of fields
+// The isDelimiter function should return true if the character is a delimiter.
+// Delimiters are not copied as fields.
+func StringChanToFieldChan(in <-chan string, isDelimiter func(rune) bool) <-chan []string {
+	out := make(chan []string)
+
+	go func() {
+		defer close(out)
+
+		for line := range in {
+			fields := strings.FieldsFunc(line, isDelimiter)
+
+			out <- fields
+		}
+	}()
+
 
 	return out
 }

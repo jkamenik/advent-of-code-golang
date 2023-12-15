@@ -1,6 +1,10 @@
 package input
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+	"unicode"
+)
 
 func TestStreamFile(t *testing.T) {
 	collector := make([]string, 0)
@@ -58,4 +62,55 @@ func TestStringChanToIntChan(t *testing.T) {
 			t.Errorf("%v should not have errored but did", v)
 		}
 	}
+}
+
+func TestStringChanToFieldChan(t *testing.T) {
+	cases := []struct {
+		name string
+		want [][]string
+		delim func(rune) bool
+		test []string
+	}{
+		{"empty",[][]string{}, unicode.IsSpace, []string{}},
+		{"easy",[][]string{{"this"}}, unicode.IsSpace, []string{"this"}},
+		{"multiple",[][]string{{"this","and","that"}}, unicode.IsSpace, []string{"this and that"}},
+		{"multiple delimiters",[][]string{{"this","and","that"}}, unicode.IsSpace, []string{" this    and  that"}},
+	}
+
+	for _, c := range cases {
+		idx := 0
+		strings := ChanFromStringSlice(c.test)
+		fields := StringChanToFieldChan(strings, c.delim)
+
+		// for each fields
+		for field := range fields {
+			if idx > len(c.want) {
+				t.Fatalf("not enough outputs for %s", c.name)
+			}
+
+			if !reflect.DeepEqual(field, c.want[idx]) {
+				t.Errorf("%s: expected %v but got %v", c.name, c.want[idx], field)
+			}
+
+			idx += 1
+		}
+
+		if len(c.test) != idx {
+			t.Errorf("%s: expected %d items but found %d", c.name, len(c.test), idx)
+		}
+	}
+}
+
+func ChanFromStringSlice(in []string) <-chan string {
+	out := make(chan string, len(in))
+
+	go func() {
+		defer close(out)
+
+		for _, line := range in {
+			out <- line
+		}
+	}()
+
+	return out
 }
