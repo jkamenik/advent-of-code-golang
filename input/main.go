@@ -99,3 +99,18 @@ func StringChanToFieldChan(in <-chan string, isDelimiter func(rune) bool) <-chan
 
 	return out
 }
+
+func FieldsAsInts(fields []string) ([]int64, error) {
+	out := make([]int64, len(fields))
+
+	for idx, i := range fields {
+		v, err := strconv.ParseInt(i, 10, 64)
+		if err != nil {
+			return out, err
+		}
+
+		out[idx] = v
+	}
+
+	return out, nil
+}

@@ -2,8 +2,10 @@ package day5
 
 import (
 	"errors"
-	"strings"
+	"fmt"
+	"unicode"
 
+	"github.com/jkamenik/advent-of-code-golang/input"
 	"github.com/rs/zerolog/log"
 )
 
@@ -11,16 +13,18 @@ func Part1(filename string, file <-chan string) (string, error) {
 	seeds := newSeedMap()
 	state := stateSeed
 
-	for line := range file {
+	for fields := range input.StringChanToFieldChan(file, unicode.IsSpace) {
 		if state == nil {
-			log.Info().Str("line", line).Msg("unknown state")
+			log.Info().Strs("fields", fields).Msg("unknown state")
 			break
 		}
 
-		state = state(seeds, line)
+		state = state(seeds, fields)
 	}
 
-	return "done", nil
+	log.Debug().Stringer("map", seeds).Msg("Seed Map")
+
+	return fmt.Sprintf("min: %v", seeds.lowestLocation()), nil
 }
 
 func Part2(filename string, file <-chan string) (string, error) {
@@ -28,56 +32,278 @@ func Part2(filename string, file <-chan string) (string, error) {
 }
 
 type seedMap struct {
-	seedsToSoil map[string]string
+	seeds []int64
+	seedsToSoil map[int64]int64
+	soilToFertilizer map[int64]int64
+	fertilizerToWater map[int64]int64
+	waterToLight map[int64]int64
+	lightToTemperature map[int64]int64
+	temperatureToHumidity map[int64]int64
+	humidityToLocation map[int64]int64
 }
-type stateFn func(*seedMap, string) stateFn
+type stateFn func(*seedMap, []string) stateFn
 
 func newSeedMap() *seedMap {
-	seeds := seedMap{}
+	seeds := seedMap{
+		seeds: []int64{},
+		seedsToSoil: map[int64]int64{},
+		soilToFertilizer: map[int64]int64{},
+		fertilizerToWater: map[int64]int64{},
+		waterToLight: map[int64]int64{},
+		lightToTemperature: map[int64]int64{},
+		temperatureToHumidity: map[int64]int64{},
+		humidityToLocation: map[int64]int64{},
+	}
 
 	return &seeds
 }
 
-func stateSeed(seeds *seedMap, line string) stateFn {
-	// line is "seeds: " + fields of seeds
-	f := strings.Fields(line)
+func (s *seedMap) String() string {
+	return fmt.Sprintf("{seeds: %v, seedToSoil: %v, soilToFertilizer: %v, fertilizerToWater: %v, waterToLight: %v, lightToTemperature: %v, temperatureToHumidity: %v, humidityToLocation: %v}", s.seeds, s.seedsToSoil, s.soilToFertilizer, s.fertilizerToWater, s.waterToLight, s.lightToTemperature, s.temperatureToHumidity, s.humidityToLocation)
+}
 
-	log.Trace().Strs("Seeds",f).Msg("seeds")
+func (s seedMap) lowestLocation() int64 {
+	minLoc := int64(0)
+
+	for _, seed := range s.seeds {
+		soil, ok := s.seedsToSoil[seed]
+		if !ok {
+			soil = seed
+		}
+
+		fert, ok := s.soilToFertilizer[soil]
+		if !ok {
+			fert = soil
+		}
+
+		water, ok := s.fertilizerToWater[fert]
+		if !ok {
+			water = fert
+		}
+
+		light, ok := s.waterToLight[water]
+		if !ok {
+			light = water
+		}
+
+		temp, ok := s.lightToTemperature[light]
+		if !ok {
+			temp = light
+		}
+
+		humidity, ok := s.temperatureToHumidity[temp]
+		if !ok {
+			humidity = temp
+		}
+
+		loc, ok := s.humidityToLocation[humidity]
+		if !ok {
+			loc = humidity
+		}
+
+		if loc < minLoc || minLoc == 0 {
+			minLoc = loc
+		}
+	}
+
+	return minLoc
+}
+
+func stateSeed(seeds *seedMap, fields []string) stateFn {
+	log.Trace().Strs("Seeds",fields).Msg("seeds")
+
+	ints, err := input.FieldsAsInts(fields[1:])
+	if err != nil {
+		log.Error().Err(err).Msg("unable to convert fields to int")
+		return nil
+	}
+
+	seeds.seeds = ints
 
 	return stateMap
 }
 
-func stateMap(seeds *seedMap, line string) stateFn {
-	f := strings.Fields(line)
-	log.Trace().Strs("fields",f).Msg("stateMap")
+func stateMap(seeds *seedMap, fields []string) stateFn {
+	log.Trace().Strs("fields",fields).Msg("stateMap")
 
-	if len(f) < 1 {
+	if len(fields) < 1 {
 		// empty line
 		return stateMap
 	}
 
-	switch f[0] {
+	switch fields[0] {
 	case "seed-to-soil":
 		return stateSeedToSoil
+	case "soil-to-fertilizer":
+		return stateSoilToFertilizer
+	case "fertilizer-to-water":
+		return stateFertilizerToWater
+	case "water-to-light":
+		return stateWaterToLight
+	case "light-to-temperature":
+		return stateLightToTemperature
+	case "temperature-to-humidity":
+		return stateTemperatureToHumidity
+	case "humidity-to-location":
+		return stateHumidityToLocation
 	default:
-		log.Trace().Str("field", f[0]).Msg("No state match found")
+		log.Trace().Str("field", fields[0]).Msg("No state match found")
 		return stateMap
 	}
 }
 
-func stateSeedToSoil(seeds *seedMap, line string) stateFn {
-	f := strings.Fields(line)
-	log.Trace().Strs("fields",f).Msg("stateSeedToSoil")
+func updateState(place map[int64]int64, fields []string) error {
+	log.Trace().Strs("fields",fields).Msg("updateState")
 
-	if len(f) != 3 {
+	if len(fields) != 3 {
 		// give statemap a chance
-		return stateMap(seeds, line)
+		log.Warn().Strs("fields", fields).Msg("invalid line")
+		return nil
 	}
 
-	soil := f[0]
-	seed := f[1]
-	count := f[2]
+	ints, err := input.FieldsAsInts(fields)
+	if err != nil {
+		log.Error().Err(err).Msg("unable to convert fields to int")
+		return err
+	}
 
-	// assume I am still correct
+	val := ints[0]
+	idx := ints[1]
+	count := ints[2]
+
+	for i := int64(0); i < count; i++ {
+		log.Trace().Int64("idx", idx).Int64("val", val).Msg("setting map")
+		place[idx] = val
+
+		val += 1
+		idx += 1
+	}
+
+	return nil
+}
+
+func stateSeedToSoil(seeds *seedMap, fields []string) stateFn {
+	log.Trace().Strs("fields",fields).Msg("stateSeedToSoil")
+
+	if len(fields) != 3 {
+		// give statemap a chance
+		log.Warn().Strs("fields", fields).Msg("invalid line")
+		return stateMap
+	}
+
+	err := updateState(seeds.seedsToSoil, fields)
+	if err != nil {
+		log.Error().Err(err).Msg("unable to update state")
+		return nil
+	}
+
 	return stateSeedToSoil
+}
+
+func stateSoilToFertilizer(seeds *seedMap, fields []string) stateFn {
+	log.Trace().Strs("fields",fields).Msg("stateSoilToFertilizer")
+
+	if len(fields) != 3 {
+		// give statemap a chance
+		log.Warn().Strs("fields", fields).Msg("invalid line")
+		return stateMap
+	}
+
+	err := updateState(seeds.soilToFertilizer, fields)
+	if err != nil {
+		log.Error().Err(err).Msg("unable to update state")
+		return nil
+	}
+
+	return stateSoilToFertilizer
+}
+
+func stateFertilizerToWater(seeds *seedMap, fields []string) stateFn {
+	log.Trace().Strs("fields",fields).Msg("stateFertilizerToWater")
+
+	if len(fields) != 3 {
+		// give statemap a chance
+		log.Warn().Strs("fields", fields).Msg("invalid line")
+		return stateMap
+	}
+
+	err := updateState(seeds.fertilizerToWater, fields)
+	if err != nil {
+		log.Error().Err(err).Msg("unable to update state")
+		return nil
+	}
+
+	return stateFertilizerToWater
+}
+
+func stateWaterToLight(seeds *seedMap, fields []string) stateFn {
+	log.Trace().Strs("fields",fields).Msg("stateWaterToLight")
+
+	if len(fields) != 3 {
+		// give statemap a chance
+		log.Warn().Strs("fields", fields).Msg("invalid line")
+		return stateMap
+	}
+
+	err := updateState(seeds.waterToLight, fields)
+	if err != nil {
+		log.Error().Err(err).Msg("unable to update state")
+		return nil
+	}
+
+	return stateWaterToLight
+}
+
+func stateLightToTemperature(seeds *seedMap, fields []string) stateFn {
+	log.Trace().Strs("fields",fields).Msg("stateLightToTemperature")
+
+	if len(fields) != 3 {
+		// give statemap a chance
+		log.Warn().Strs("fields", fields).Msg("invalid line")
+		return stateMap
+	}
+
+	err := updateState(seeds.lightToTemperature, fields)
+	if err != nil {
+		log.Error().Err(err).Msg("unable to update state")
+		return nil
+	}
+
+	return stateLightToTemperature
+}
+
+func stateTemperatureToHumidity(seeds *seedMap, fields []string) stateFn {
+	log.Trace().Strs("fields",fields).Msg("stateTemperatureToHumidity")
+
+	if len(fields) != 3 {
+		// give statemap a chance
+		log.Warn().Strs("fields", fields).Msg("invalid line")
+		return stateMap
+	}
+
+	err := updateState(seeds.temperatureToHumidity, fields)
+	if err != nil {
+		log.Error().Err(err).Msg("unable to update state")
+		return nil
+	}
+
+	return stateTemperatureToHumidity
+}
+
+func stateHumidityToLocation(seeds *seedMap, fields []string) stateFn {
+	log.Trace().Strs("fields",fields).Msg("stateHumidityToLocation")
+
+	if len(fields) != 3 {
+		// give statemap a chance
+		log.Warn().Strs("fields", fields).Msg("invalid line")
+		return stateMap
+	}
+
+	err := updateState(seeds.humidityToLocation, fields)
+	if err != nil {
+		log.Error().Err(err).Msg("unable to update state")
+		return nil
+	}
+
+	return stateHumidityToLocation
 }
