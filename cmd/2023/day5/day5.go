@@ -1,3 +1,4 @@
+// Below was a naive implementation expanding all the
 package day5
 
 import (
@@ -33,26 +34,27 @@ func Part2(filename string, file <-chan string) (string, error) {
 
 type seedMap struct {
 	seeds []int64
-	seedsToSoil map[int64]int64
-	soilToFertilizer map[int64]int64
-	fertilizerToWater map[int64]int64
-	waterToLight map[int64]int64
-	lightToTemperature map[int64]int64
-	temperatureToHumidity map[int64]int64
-	humidityToLocation map[int64]int64
+
+  seedToSoil toMap
+  soilToFertilizer toMap
+  fertilizerToWater toMap
+  WaterToLight toMap
+  lightToTemperature toMap
+  temperatureToHumidity toMap
+  humidityToLocation toMap
 }
-type stateFn func(*seedMap, []string) stateFn
 
 func newSeedMap() *seedMap {
 	seeds := seedMap{
 		seeds: []int64{},
-		seedsToSoil: map[int64]int64{},
-		soilToFertilizer: map[int64]int64{},
-		fertilizerToWater: map[int64]int64{},
-		waterToLight: map[int64]int64{},
-		lightToTemperature: map[int64]int64{},
-		temperatureToHumidity: map[int64]int64{},
-		humidityToLocation: map[int64]int64{},
+
+    seedToSoil: toMap{},
+    soilToFertilizer: toMap{},
+    fertilizerToWater: toMap{},
+    WaterToLight: toMap{},
+    lightToTemperature: toMap{},
+    temperatureToHumidity: toMap{},
+    humidityToLocation: toMap{},
 	}
 
 	return &seeds
@@ -62,49 +64,19 @@ func (s *seedMap) String() string {
 	return fmt.Sprintf("{seeds: %v, seedToSoil: %v, soilToFertilizer: %v, fertilizerToWater: %v, waterToLight: %v, lightToTemperature: %v, temperatureToHumidity: %v, humidityToLocation: %v}", s.seeds, s.seedsToSoil, s.soilToFertilizer, s.fertilizerToWater, s.waterToLight, s.lightToTemperature, s.temperatureToHumidity, s.humidityToLocation)
 }
 
+
+type toMap []entry
+type entry struct {
+  src int64
+  dest int64
+  count int64
+}
+
+// This defined a finite state machine
+type stateFn func(*seedMap, []string) stateFn
+
 func (s seedMap) lowestLocation() int64 {
 	minLoc := int64(0)
-
-	for _, seed := range s.seeds {
-		soil, ok := s.seedsToSoil[seed]
-		if !ok {
-			soil = seed
-		}
-
-		fert, ok := s.soilToFertilizer[soil]
-		if !ok {
-			fert = soil
-		}
-
-		water, ok := s.fertilizerToWater[fert]
-		if !ok {
-			water = fert
-		}
-
-		light, ok := s.waterToLight[water]
-		if !ok {
-			light = water
-		}
-
-		temp, ok := s.lightToTemperature[light]
-		if !ok {
-			temp = light
-		}
-
-		humidity, ok := s.temperatureToHumidity[temp]
-		if !ok {
-			humidity = temp
-		}
-
-		loc, ok := s.humidityToLocation[humidity]
-		if !ok {
-			loc = humidity
-		}
-
-		if loc < minLoc || minLoc == 0 {
-			minLoc = loc
-		}
-	}
 
 	return minLoc
 }
@@ -120,6 +92,7 @@ func stateSeed(seeds *seedMap, fields []string) stateFn {
 
 	seeds.seeds = ints
 
+  // now move on to the transitions
 	return stateMap
 }
 
