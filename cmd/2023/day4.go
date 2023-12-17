@@ -28,7 +28,7 @@ func d4p2(filename string, file <-chan string) (string, error) {
 		cards = append(cards, NewD4Card(line))
 	}
 
-	counts := make([]int,len(cards)+1)
+	counts := make([]int, len(cards)+1)
 
 	for _, card := range cards {
 		counts[card.ID] += 1
@@ -37,7 +37,7 @@ func d4p2(filename string, file <-chan string) (string, error) {
 
 		log.Trace().Int("matches", matches).Int("factor", factor).Msgf("counts %v", counts)
 
-		for i := card.ID+1; i <= card.ID + int64(matches); i++  {
+		for i := card.ID + 1; i <= card.ID+int64(matches); i++ {
 			counts[i] += factor
 			log.Trace().Str("counts", fmt.Sprintf("%v", counts)).Msgf("incrementing %d by %d", i, factor)
 		}
@@ -56,6 +56,7 @@ type d4Card struct {
 	Winners []int64
 	Numbers []int64
 }
+
 func (c d4Card) String() string {
 	return fmt.Sprintf("{id: '%v', w: %v, n: %v}", c.ID, c.Winners, c.Numbers)
 }
@@ -94,7 +95,7 @@ func DigitsFromString(s string) []int64 {
 	acc := ""
 
 	for _, r := range s {
-		log.Trace().Str("acc",acc).Str("digits",fmt.Sprintf("%v", rtn)).Msgf("rune: '%v'", string(r))
+		log.Trace().Str("acc", acc).Str("digits", fmt.Sprintf("%v", rtn)).Msgf("rune: '%v'", string(r))
 
 		if r >= '0' && r <= '9' {
 			acc = acc + string(r)

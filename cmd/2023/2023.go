@@ -17,7 +17,7 @@ type Puzzle func(filename string, file <-chan string) (output string, err error)
 
 // RegisterPuzzle registers a puzzle for execution
 func RegisterPuzzle(day string, puzzle Puzzle) {
-	log.Trace().Str("lookup",day).Msg("Registered puzzle")
+	log.Trace().Str("lookup", day).Msg("Registered puzzle")
 	puzzleLookup[day] = puzzle
 }
 

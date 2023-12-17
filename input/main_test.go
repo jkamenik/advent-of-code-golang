@@ -66,15 +66,15 @@ func TestStringChanToIntChan(t *testing.T) {
 
 func TestStringChanToFieldChan(t *testing.T) {
 	cases := []struct {
-		name string
-		want [][]string
+		name  string
+		want  [][]string
 		delim func(rune) bool
-		test []string
+		test  []string
 	}{
-		{"empty",[][]string{}, unicode.IsSpace, []string{}},
-		{"easy",[][]string{{"this"}}, unicode.IsSpace, []string{"this"}},
-		{"multiple",[][]string{{"this","and","that"}}, unicode.IsSpace, []string{"this and that"}},
-		{"multiple delimiters",[][]string{{"this","and","that"}}, unicode.IsSpace, []string{" this    and  that"}},
+		{"empty", [][]string{}, unicode.IsSpace, []string{}},
+		{"easy", [][]string{{"this"}}, unicode.IsSpace, []string{"this"}},
+		{"multiple", [][]string{{"this", "and", "that"}}, unicode.IsSpace, []string{"this and that"}},
+		{"multiple delimiters", [][]string{{"this", "and", "that"}}, unicode.IsSpace, []string{" this    and  that"}},
 	}
 
 	for _, c := range cases {

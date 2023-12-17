@@ -277,21 +277,21 @@ func (n d3Number) isSymbolAdjacent() bool {
 func (n d3Number) isNear(x, y int) bool {
 	// same row
 	if x == n.X {
-		if y == n.Y - 1  || y == n.Y + n.Length {
+		if y == n.Y-1 || y == n.Y+n.Length {
 			return true
 		}
 	}
 
 	// above
-	if x == n.X - 1{
-		if y >= n.Y - 1  && y <= n.Y + n.Length{
+	if x == n.X-1 {
+		if y >= n.Y-1 && y <= n.Y+n.Length {
 			return true
 		}
 	}
 
 	// below
-	if x == n.X + 1 {
-		if y >= n.Y - 1  && y <= n.Y + n.Length{
+	if x == n.X+1 {
+		if y >= n.Y-1 && y <= n.Y+n.Length {
 			return true
 		}
 	}

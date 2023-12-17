@@ -79,7 +79,6 @@ func StringChanToIntChan(in <-chan string) <-chan IntOrErr {
 	return out
 }
 
-
 // StringChanToFieldChan converts a string change into a channel of fields
 // The isDelimiter function should return true if the character is a delimiter.
 // Delimiters are not copied as fields.
@@ -95,7 +94,6 @@ func StringChanToFieldChan(in <-chan string, isDelimiter func(rune) bool) <-chan
 			out <- fields
 		}
 	}()
-
 
 	return out
 }
